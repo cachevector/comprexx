@@ -4,9 +4,9 @@
 
 <h1 align="center">CompreXX</h1>
 
-<p align="center">
+<!-- <p align="center">
   <b> A fast C++ CLI tool for Linux, compressing/decompressing files with RLE, Huffman, and optional LZ77/LZ78, using custom .cmpx format </b>
-</p>
+</p> -->
 
 <p align="center">
   <img src="https://img.shields.io/badge/License-MIT-green" />
@@ -14,5 +14,9 @@
   <img src="https://img.shields.io/badge/language-C%2B%2B-00599C" />
   <img src="https://img.shields.io/badge/platform-Linux-ff69b4" />
   <!-- <img src="https://img.shields.io/badge/dependencies-none-lightgrey" /> -->
-  <img src="https://img.shields.io/badge/docs-available-blue" />
+  <img src="https://img.shields.io/badge/docs-unavailable-red" />
 </p>
+
+> **⚠️ Development Notice**
+> 
+> Development of CompreXX is currently on hold and is scheduled to resume around January/February 2026. Stay tuned for updates!
