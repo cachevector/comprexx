@@ -1,3 +1,4 @@
+from comprexx.stages.decomposition.low_rank import LowRankDecomposition
 from comprexx.stages.pruning.nm_sparsity import NMSparsity
 from comprexx.stages.pruning.structured import StructuredPruning
 from comprexx.stages.pruning.unstructured import UnstructuredPruning
@@ -6,6 +7,7 @@ from comprexx.stages.quantization.ptq_static import PTQStatic
 from comprexx.stages.quantization.weight_only import WeightOnlyQuant
 
 __all__ = [
+    "LowRankDecomposition",
     "NMSparsity",
     "PTQDynamic",
     "PTQStatic",

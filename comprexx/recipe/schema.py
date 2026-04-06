@@ -74,6 +74,17 @@ class WeightOnlyQuantStageConfig(BaseModel):
     exclude_layers: list[str] = Field(default_factory=list)
 
 
+class LowRankDecompositionStageConfig(BaseModel):
+    """Recipe stage config for low-rank decomposition."""
+
+    technique: Literal["low_rank_decomposition"]
+    rank_ratio: float = Field(default=0.5, gt=0.0, le=1.0)
+    energy_threshold: Optional[float] = Field(default=None, gt=0.0, le=1.0)
+    mode: Literal["ratio", "energy"] = "ratio"
+    min_rank: int = Field(default=1, ge=1)
+    exclude_layers: list[str] = Field(default_factory=list)
+
+
 StageConfig = Annotated[
     Union[
         StructuredPruningStageConfig,
@@ -82,6 +93,7 @@ StageConfig = Annotated[
         PTQDynamicStageConfig,
         PTQStaticStageConfig,
         WeightOnlyQuantStageConfig,
+        LowRankDecompositionStageConfig,
     ],
     Field(discriminator="technique"),
 ]
