@@ -64,6 +64,16 @@ class PTQStaticStageConfig(BaseModel):
     exclude_layers: list[str] = Field(default_factory=list)
 
 
+class WeightOnlyQuantStageConfig(BaseModel):
+    """Recipe stage config for weight-only quantization."""
+
+    technique: Literal["weight_only_quant"]
+    bits: Literal[4, 8] = 8
+    group_size: int = Field(default=128, ge=8)
+    symmetric: bool = True
+    exclude_layers: list[str] = Field(default_factory=list)
+
+
 StageConfig = Annotated[
     Union[
         StructuredPruningStageConfig,
@@ -71,6 +81,7 @@ StageConfig = Annotated[
         NMSparsityStageConfig,
         PTQDynamicStageConfig,
         PTQStaticStageConfig,
+        WeightOnlyQuantStageConfig,
     ],
     Field(discriminator="technique"),
 ]

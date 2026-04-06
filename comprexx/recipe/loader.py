@@ -17,6 +17,7 @@ from comprexx.stages.pruning.structured import StructuredPruning
 from comprexx.stages.pruning.unstructured import UnstructuredPruning
 from comprexx.stages.quantization.ptq_dynamic import PTQDynamic
 from comprexx.stages.quantization.ptq_static import PTQStatic
+from comprexx.stages.quantization.weight_only import WeightOnlyQuant
 
 
 def load_recipe(path: str | Path) -> RecipeV1:
@@ -97,6 +98,15 @@ def recipe_to_pipeline(recipe: RecipeV1) -> tuple[Pipeline, AccuracyGuard | None
                     format=stage_config.format,
                     calibration_method=stage_config.calibration_method,
                     calibration_samples=stage_config.calibration_samples,
+                    exclude_layers=stage_config.exclude_layers,
+                )
+            )
+        elif technique == "weight_only_quant":
+            stages.append(
+                WeightOnlyQuant(
+                    bits=stage_config.bits,
+                    group_size=stage_config.group_size,
+                    symmetric=stage_config.symmetric,
                     exclude_layers=stage_config.exclude_layers,
                 )
             )
