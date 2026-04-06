@@ -26,6 +26,17 @@ class StructuredPruningStageConfig(BaseModel):
     exclude_layers: list[str] = Field(default_factory=list)
 
 
+class UnstructuredPruningStageConfig(BaseModel):
+    """Recipe stage config for unstructured pruning."""
+
+    technique: Literal["unstructured_pruning"]
+    sparsity: float = Field(default=0.5, ge=0.0, le=1.0)
+    criteria: Literal["magnitude", "random"] = "magnitude"
+    scope: Literal["global", "local"] = "global"
+    gradual_steps: int = Field(default=1, ge=1)
+    exclude_layers: list[str] = Field(default_factory=list)
+
+
 class PTQDynamicStageConfig(BaseModel):
     """Recipe stage config for dynamic quantization."""
 
@@ -44,7 +55,12 @@ class PTQStaticStageConfig(BaseModel):
 
 
 StageConfig = Annotated[
-    Union[StructuredPruningStageConfig, PTQDynamicStageConfig, PTQStaticStageConfig],
+    Union[
+        StructuredPruningStageConfig,
+        UnstructuredPruningStageConfig,
+        PTQDynamicStageConfig,
+        PTQStaticStageConfig,
+    ],
     Field(discriminator="technique"),
 ]
 

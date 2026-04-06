@@ -13,6 +13,7 @@ from comprexx.core.pipeline import Pipeline
 from comprexx.recipe.schema import RecipeV1
 from comprexx.stages.base import CompressionStage
 from comprexx.stages.pruning.structured import StructuredPruning
+from comprexx.stages.pruning.unstructured import UnstructuredPruning
 from comprexx.stages.quantization.ptq_dynamic import PTQDynamic
 from comprexx.stages.quantization.ptq_static import PTQStatic
 
@@ -65,6 +66,16 @@ def recipe_to_pipeline(recipe: RecipeV1) -> tuple[Pipeline, AccuracyGuard | None
                     criteria=stage_config.criteria,
                     scope=stage_config.scope,
                     target=stage_config.target,
+                    exclude_layers=stage_config.exclude_layers,
+                )
+            )
+        elif technique == "unstructured_pruning":
+            stages.append(
+                UnstructuredPruning(
+                    sparsity=stage_config.sparsity,
+                    criteria=stage_config.criteria,
+                    scope=stage_config.scope,
+                    gradual_steps=stage_config.gradual_steps,
                     exclude_layers=stage_config.exclude_layers,
                 )
             )
