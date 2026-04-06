@@ -1,3 +1,4 @@
+from comprexx.stages.clustering.weight_clustering import WeightClustering
 from comprexx.stages.decomposition.low_rank import LowRankDecomposition
 from comprexx.stages.fusion.operator_fusion import OperatorFusion
 from comprexx.stages.pruning.nm_sparsity import NMSparsity
@@ -15,5 +16,6 @@ __all__ = [
     "PTQStatic",
     "StructuredPruning",
     "UnstructuredPruning",
+    "WeightClustering",
     "WeightOnlyQuant",
 ]

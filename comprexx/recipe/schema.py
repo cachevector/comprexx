@@ -93,6 +93,17 @@ class OperatorFusionStageConfig(BaseModel):
     fallback_on_trace_error: bool = True
 
 
+class WeightClusteringStageConfig(BaseModel):
+    """Recipe stage config for weight clustering."""
+
+    technique: Literal["weight_clustering"]
+    num_clusters: int = Field(default=16, ge=2, le=65536)
+    init: Literal["linear", "random", "density"] = "linear"
+    max_iter: int = Field(default=15, ge=1)
+    per_layer: bool = True
+    exclude_layers: list[str] = Field(default_factory=list)
+
+
 StageConfig = Annotated[
     Union[
         StructuredPruningStageConfig,
@@ -103,6 +114,7 @@ StageConfig = Annotated[
         WeightOnlyQuantStageConfig,
         LowRankDecompositionStageConfig,
         OperatorFusionStageConfig,
+        WeightClusteringStageConfig,
     ],
     Field(discriminator="technique"),
 ]

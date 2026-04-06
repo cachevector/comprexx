@@ -12,6 +12,7 @@ from comprexx.core.guard import AccuracyGuard
 from comprexx.core.pipeline import Pipeline
 from comprexx.recipe.schema import RecipeV1
 from comprexx.stages.base import CompressionStage
+from comprexx.stages.clustering.weight_clustering import WeightClustering
 from comprexx.stages.decomposition.low_rank import LowRankDecomposition
 from comprexx.stages.fusion.operator_fusion import OperatorFusion
 from comprexx.stages.pruning.nm_sparsity import NMSparsity
@@ -127,6 +128,16 @@ def recipe_to_pipeline(recipe: RecipeV1) -> tuple[Pipeline, AccuracyGuard | None
                 OperatorFusion(
                     fuse_conv_bn=stage_config.fuse_conv_bn,
                     fallback_on_trace_error=stage_config.fallback_on_trace_error,
+                )
+            )
+        elif technique == "weight_clustering":
+            stages.append(
+                WeightClustering(
+                    num_clusters=stage_config.num_clusters,
+                    init=stage_config.init,
+                    max_iter=stage_config.max_iter,
+                    per_layer=stage_config.per_layer,
+                    exclude_layers=stage_config.exclude_layers,
                 )
             )
         else:
