@@ -85,6 +85,14 @@ class LowRankDecompositionStageConfig(BaseModel):
     exclude_layers: list[str] = Field(default_factory=list)
 
 
+class OperatorFusionStageConfig(BaseModel):
+    """Recipe stage config for operator fusion."""
+
+    technique: Literal["operator_fusion"]
+    fuse_conv_bn: bool = True
+    fallback_on_trace_error: bool = True
+
+
 StageConfig = Annotated[
     Union[
         StructuredPruningStageConfig,
@@ -94,6 +102,7 @@ StageConfig = Annotated[
         PTQStaticStageConfig,
         WeightOnlyQuantStageConfig,
         LowRankDecompositionStageConfig,
+        OperatorFusionStageConfig,
     ],
     Field(discriminator="technique"),
 ]

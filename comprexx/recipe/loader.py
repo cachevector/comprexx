@@ -13,6 +13,7 @@ from comprexx.core.pipeline import Pipeline
 from comprexx.recipe.schema import RecipeV1
 from comprexx.stages.base import CompressionStage
 from comprexx.stages.decomposition.low_rank import LowRankDecomposition
+from comprexx.stages.fusion.operator_fusion import OperatorFusion
 from comprexx.stages.pruning.nm_sparsity import NMSparsity
 from comprexx.stages.pruning.structured import StructuredPruning
 from comprexx.stages.pruning.unstructured import UnstructuredPruning
@@ -119,6 +120,13 @@ def recipe_to_pipeline(recipe: RecipeV1) -> tuple[Pipeline, AccuracyGuard | None
                     mode=stage_config.mode,
                     min_rank=stage_config.min_rank,
                     exclude_layers=stage_config.exclude_layers,
+                )
+            )
+        elif technique == "operator_fusion":
+            stages.append(
+                OperatorFusion(
+                    fuse_conv_bn=stage_config.fuse_conv_bn,
+                    fallback_on_trace_error=stage_config.fallback_on_trace_error,
                 )
             )
         else:
