@@ -12,6 +12,7 @@ from comprexx.core.guard import AccuracyGuard
 from comprexx.core.pipeline import Pipeline
 from comprexx.recipe.schema import RecipeV1
 from comprexx.stages.base import CompressionStage
+from comprexx.stages.pruning.nm_sparsity import NMSparsity
 from comprexx.stages.pruning.structured import StructuredPruning
 from comprexx.stages.pruning.unstructured import UnstructuredPruning
 from comprexx.stages.quantization.ptq_dynamic import PTQDynamic
@@ -76,6 +77,15 @@ def recipe_to_pipeline(recipe: RecipeV1) -> tuple[Pipeline, AccuracyGuard | None
                     criteria=stage_config.criteria,
                     scope=stage_config.scope,
                     gradual_steps=stage_config.gradual_steps,
+                    exclude_layers=stage_config.exclude_layers,
+                )
+            )
+        elif technique == "nm_sparsity":
+            stages.append(
+                NMSparsity(
+                    n=stage_config.n,
+                    m=stage_config.m,
+                    criteria=stage_config.criteria,
                     exclude_layers=stage_config.exclude_layers,
                 )
             )

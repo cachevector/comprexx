@@ -37,6 +37,16 @@ class UnstructuredPruningStageConfig(BaseModel):
     exclude_layers: list[str] = Field(default_factory=list)
 
 
+class NMSparsityStageConfig(BaseModel):
+    """Recipe stage config for N:M sparsity."""
+
+    technique: Literal["nm_sparsity"]
+    n: int = Field(default=2, ge=1)
+    m: int = Field(default=4, ge=2)
+    criteria: Literal["magnitude", "random"] = "magnitude"
+    exclude_layers: list[str] = Field(default_factory=list)
+
+
 class PTQDynamicStageConfig(BaseModel):
     """Recipe stage config for dynamic quantization."""
 
@@ -58,6 +68,7 @@ StageConfig = Annotated[
     Union[
         StructuredPruningStageConfig,
         UnstructuredPruningStageConfig,
+        NMSparsityStageConfig,
         PTQDynamicStageConfig,
         PTQStaticStageConfig,
     ],
