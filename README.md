@@ -11,7 +11,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/License-Apache_2.0-green" />
   <img src="https://img.shields.io/badge/python-3.10+-blue" />
-  <img src="https://img.shields.io/badge/version-0.1.0-orange" />
+  <img src="https://img.shields.io/badge/version-0.2.0-orange" />
 </p>
 
 ---
@@ -67,7 +67,7 @@ result = pipeline.run(model, input_shape=(1, 3, 224, 224))
 print(result.report.summary())
 ```
 
-`StructuredPruning` ranks conv filters by importance and zeros out the bottom 30%. `PTQDynamic` quantizes Linear layers to INT8 at runtime. You can chain as many stages as you want.
+`StructuredPruning` ranks conv filters by importance and zeros out the bottom 30%. `PTQDynamic` quantizes Linear layers to INT8 at runtime. You can chain as many stages as you want. See the full list of techniques below.
 
 The result gives you the compressed model and a report with before/after metrics for each stage.
 
@@ -89,6 +89,30 @@ result = pipeline.run(
 ```
 
 If accuracy drops more than 2%, the pipeline stops and tells you which stage caused the problem and what to try instead.
+
+### Find sensitive layers before compressing
+
+Some layers survive heavy compression, others fall apart. `analyze_sensitivity` probes each layer with a small perturbation and reports which ones hurt accuracy the most:
+
+```python
+report = cx.analyze_sensitivity(
+    model,
+    eval_fn=eval_fn,
+    metric="top1_accuracy",
+    perturbation="prune",
+    intensity=0.3,
+)
+
+print(report.summary())
+
+# Use the result to auto-populate exclude_layers
+sensitive = report.recommend_exclusions(threshold=0.02)
+pipeline = cx.Pipeline([
+    cx.stages.StructuredPruning(sparsity=0.5, exclude_layers=sensitive),
+])
+```
+
+The `perturbation` can be `"prune"` (zero the smallest weights) or `"noise"` (add Gaussian noise scaled by weight std). Each layer is snapshotted and restored in place, so no deep copies of the model are made.
 
 ### Export to ONNX
 
@@ -157,8 +181,20 @@ Every compression run saves its artifacts (model profile, compression report, pe
 | Technique | Description |
 |-----------|-------------|
 | Structured pruning | Removes entire conv filters ranked by L1/L2 norm. Supports global and per-layer scoping, with `exclude_layers` to protect sensitive layers. |
+| Unstructured pruning | Magnitude-based element-wise pruning for Conv2d and Linear layers. Supports gradual pruning over multiple steps via a cubic schedule. |
+| N:M sparsity | Structured N-of-M sparsity (default 2:4) along the input dimension, matching what NVIDIA Ampere sparse tensor cores accelerate natively. |
 | PTQ Dynamic (INT8) | Quantizes Linear and LSTM weights to INT8 at runtime. No calibration data needed. |
 | PTQ Static (INT8) | Quantizes weights and activations to INT8 using calibration data to determine ranges. |
+| Weight-only quantization | Group-wise INT4/INT8 quantization for Linear and Conv2d weights with symmetric or asymmetric scaling. Activations stay in float. |
+| Low-rank decomposition | Truncated SVD factorization of Linear layers into two smaller layers. Picks rank by fixed ratio or energy threshold, and skips layers where decomposition would not save parameters. |
+| Operator fusion | Folds Conv2d + BatchNorm2d pairs into a single equivalent Conv2d using torch.fx. Zero accuracy cost, fewer layers, fewer params. |
+| Weight clustering | Per-layer k-means clustering of weights into a shared codebook of `k` centroids. Reports the theoretical packed size at `ceil(log2(k))` bits per weight. |
+
+And for picking what to compress:
+
+| Tool | Description |
+|------|-------------|
+| Sensitivity analysis | `cx.analyze_sensitivity()` probes each Conv2d/Linear layer with a prune or noise perturbation, re-runs your `eval_fn`, and ranks layers by metric drop. Can also suggest `exclude_layers` above a chosen threshold. |
 
 ## License
 

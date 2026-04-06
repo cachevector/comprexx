@@ -3,6 +3,11 @@
 __version__ = "0.1.0"
 
 from comprexx.analysis.profiler import ModelProfile, analyze
+from comprexx.analysis.sensitivity import (
+    LayerSensitivity,
+    SensitivityReport,
+    analyze_sensitivity,
+)
 from comprexx.core.exceptions import (
     AccuracyGuardTriggered,
     CalibrationError,
@@ -27,8 +32,10 @@ __all__ = [
     "CompressionReport",
     "ComprexxError",
     "ExportError",
+    "LayerSensitivity",
     "ModelLoadError",
     "ModelProfile",
+    "SensitivityReport",
     "ONNXExporter",
     "Pipeline",
     "PipelineResult",
@@ -36,6 +43,7 @@ __all__ = [
     "StageReport",
     "UnsupportedLayerError",
     "analyze",
+    "analyze_sensitivity",
     "load_recipe",
     "stages",
 ]
