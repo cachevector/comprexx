@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
+  <a href="https://pypi.org/project/comprexx/"><img src="https://img.shields.io/pypi/v/comprexx?color=orange" /></a>
   <img src="https://img.shields.io/badge/License-Apache_2.0-green" />
   <img src="https://img.shields.io/badge/python-3.10+-blue" />
-  <img src="https://img.shields.io/badge/version-0.2.0-orange" />
 </p>
 
 ---
@@ -23,7 +23,13 @@ No more gluing together five different libraries to get a model out the door.
 ## Install
 
 ```bash
-pip install -e ".[dev,onnx]"
+pip install comprexx
+```
+
+For ONNX export support:
+
+```bash
+pip install "comprexx[onnx]"
 ```
 
 Requires Python 3.10+ and PyTorch 2.0+.
