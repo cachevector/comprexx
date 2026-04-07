@@ -1,6 +1,6 @@
 [project]
 name = "comprexx"
-version = "0.1.0"
+version = "0.2.0"
 description = "ML Model Compression & Deployment Optimization Toolkit"
 readme = "README.md"
 license = "Apache-2.0"
@@ -26,6 +26,11 @@ dependencies = [
     "rich>=13.0",
     "pyyaml>=6.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/cachevector/comprexx"
+Repository = "https://github.com/cachevector/comprexx"
+Issues = "https://github.com/cachevector/comprexx/issues"
 
 [project.optional-dependencies]
 onnx = ["onnx>=1.14", "onnxruntime>=1.15", "onnxscript>=0.6", "onnxsim>=0.4"]
