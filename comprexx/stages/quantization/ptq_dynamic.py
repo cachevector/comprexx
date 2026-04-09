@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import time
+import warnings
 from typing import Literal
 
 import torch
@@ -13,6 +14,10 @@ from pydantic import BaseModel
 from comprexx.analysis.profiler import analyze
 from comprexx.core.report import StageReport
 from comprexx.stages.base import CompressionStage, StageContext
+
+# TODO(v0.3): migrate to torchao.quantization. torch.ao.quantization is
+# scheduled for removal in torch 2.10. Tracked at pytorch/ao#2259.
+_TORCH_AO_WARN = r"torch\.ao\.quantization is deprecated"
 
 
 class PTQDynamicConfig(BaseModel):
@@ -47,13 +52,19 @@ class PTQDynamic(CompressionStage):
         # Profile before
         profile_before = analyze(model, context.input_shape, context.device)
 
-        # Apply dynamic quantization
+        # Apply dynamic quantization. Silence the torch.ao.quantization
+        # deprecation warning — it's noise for our users, and we track the
+        # migration in the TODO above.
         dtype = torch.qint8
-        quantized_model = torch.quantization.quantize_dynamic(
-            model,
-            qconfig_spec={nn.Linear, nn.LSTM},
-            dtype=dtype,
-        )
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore", message=_TORCH_AO_WARN, category=DeprecationWarning
+            )
+            quantized_model = torch.quantization.quantize_dynamic(
+                model,
+                qconfig_spec={nn.Linear, nn.LSTM},
+                dtype=dtype,
+            )
 
         # Profile after — size calculation for quantized models
         size_after = _quantized_model_size(quantized_model)

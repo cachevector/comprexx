@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import time
+import warnings
 from typing import Literal
 
 import torch
@@ -14,6 +15,10 @@ from comprexx.analysis.profiler import analyze
 from comprexx.core.exceptions import CalibrationError
 from comprexx.core.report import StageReport
 from comprexx.stages.base import CompressionStage, StageContext
+
+# TODO(v0.3): migrate to torchao.quantization. torch.ao.quantization is
+# scheduled for removal in torch 2.10. Tracked at pytorch/ao#2259.
+_TORCH_AO_WARN = r"torch\.ao\.quantization is deprecated"
 
 
 class PTQStaticConfig(BaseModel):
@@ -68,25 +73,28 @@ class PTQStatic(CompressionStage):
         # Fuse common patterns if possible
         model = _try_fuse(model)
 
-        # Prepare: insert observers
-        prepared = torch.quantization.prepare(model, inplace=False)
+        # Prepare → calibrate → convert. Silence the torch.ao.quantization
+        # deprecation warning — it's noise for users, tracked as a v0.3 TODO.
+        with warnings.catch_warnings():
+            warnings.filterwarnings(
+                "ignore", message=_TORCH_AO_WARN, category=DeprecationWarning
+            )
+            prepared = torch.quantization.prepare(model, inplace=False)
 
-        # Calibration: run forward passes to collect statistics
-        samples_seen = 0
-        with torch.no_grad():
-            for batch in context.calibration_data:
-                if samples_seen >= self.config.calibration_samples:
-                    break
-                if isinstance(batch, (list, tuple)):
-                    x = batch[0]
-                else:
-                    x = batch
-                x = x.to(context.device)
-                prepared(x)
-                samples_seen += x.shape[0]
+            samples_seen = 0
+            with torch.no_grad():
+                for batch in context.calibration_data:
+                    if samples_seen >= self.config.calibration_samples:
+                        break
+                    if isinstance(batch, (list, tuple)):
+                        x = batch[0]
+                    else:
+                        x = batch
+                    x = x.to(context.device)
+                    prepared(x)
+                    samples_seen += x.shape[0]
 
-        # Convert: replace observers with quantized ops
-        quantized = torch.quantization.convert(prepared, inplace=False)
+            quantized = torch.quantization.convert(prepared, inplace=False)
 
         # Estimate quantized size
         size_after = _estimate_quantized_size(quantized, profile_before.size_bytes)
