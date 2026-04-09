@@ -11,7 +11,9 @@ import torch.nn as nn
 def _conv_flops(module: nn.Conv2d, input: torch.Tensor, output: torch.Tensor) -> int:
     batch_size = output.shape[0]
     out_h, out_w = output.shape[2], output.shape[3]
-    kernel_ops = module.kernel_size[0] * module.kernel_size[1] * (module.in_channels // module.groups)
+    kernel_ops = (
+        module.kernel_size[0] * module.kernel_size[1] * (module.in_channels // module.groups)
+    )
     # 2 ops per multiply-add
     flops = 2 * batch_size * module.out_channels * out_h * out_w * kernel_ops
     if module.bias is not None:
@@ -35,7 +37,10 @@ def _bn_flops(module: nn.BatchNorm2d, input: torch.Tensor, output: torch.Tensor)
 
 _FLOP_HANDLERS: dict[type, Any] = {
     nn.Conv2d: _conv_flops,
-    nn.Conv1d: lambda m, i, o: 2 * o.shape[0] * m.out_channels * o.shape[2] * m.kernel_size[0] * (m.in_channels // m.groups),
+    nn.Conv1d: lambda m, i, o: (
+        2 * o.shape[0] * m.out_channels * o.shape[2]
+        * m.kernel_size[0] * (m.in_channels // m.groups)
+    ),
     nn.Linear: _linear_flops,
     nn.BatchNorm2d: _bn_flops,
     nn.BatchNorm1d: lambda m, i, o: 4 * i.numel(),

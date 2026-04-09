@@ -1,7 +1,6 @@
 """Tests for weight-only quantization stage."""
 
 import torch
-import torch.nn as nn
 
 from comprexx.stages.base import StageContext
 from comprexx.stages.quantization.weight_only import (

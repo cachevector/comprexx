@@ -4,7 +4,7 @@ import pytest
 import torch
 from torch.utils.data import DataLoader, TensorDataset
 
-from tests.fixtures.models import tiny_cnn, tiny_transformer, tiny_rnn
+from tests.fixtures.models import tiny_cnn, tiny_rnn, tiny_transformer
 
 
 @pytest.fixture

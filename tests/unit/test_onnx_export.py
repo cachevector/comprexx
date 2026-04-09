@@ -1,7 +1,6 @@
 """Tests for ONNX export."""
 
 import json
-from pathlib import Path
 
 import pytest
 import torch

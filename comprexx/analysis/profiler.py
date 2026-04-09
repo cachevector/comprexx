@@ -3,11 +3,10 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Optional
 
-import torch
 import torch.nn as nn
 
 from comprexx.analysis.flops import count_flops
@@ -52,7 +51,7 @@ class ModelProfile:
         return self.size_bytes / (1024 * 1024)
 
     def compressible_layers(self) -> list[LayerInfo]:
-        return [l for l in self.layers if l.is_compressible]
+        return [layer for layer in self.layers if layer.is_compressible]
 
     def summary(self) -> str:
         lines = [
@@ -76,7 +75,7 @@ class ModelProfile:
             "size_bytes": self.size_bytes,
             "size_mb": self.size_mb,
             "architecture_category": self.architecture_category,
-            "layers": [l.to_dict() for l in self.layers],
+            "layers": [layer.to_dict() for layer in self.layers],
         }
 
     def to_json(self) -> str:

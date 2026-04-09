@@ -49,4 +49,4 @@ class TestPTQDynamic:
         stage.apply(model, ctx)
 
         # Original model layers should not be replaced
-        assert type(list(model.modules())[1]) == original_type
+        assert type(list(model.modules())[1]) is original_type
