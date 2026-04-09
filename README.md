@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/cachevector/comprexx/actions/workflows/ci.yml"><img src="https://github.com/cachevector/comprexx/actions/workflows/ci.yml/badge.svg" /></a>
   <a href="https://pypi.org/project/comprexx/"><img src="https://img.shields.io/pypi/v/comprexx?color=orange" /></a>
   <img src="https://img.shields.io/badge/License-Apache_2.0-green" />
   <img src="https://img.shields.io/badge/python-3.10+-blue" />
