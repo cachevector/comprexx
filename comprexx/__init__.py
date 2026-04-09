@@ -9,6 +9,12 @@ from comprexx.analysis.sensitivity import (
     SensitivityReport,
     analyze_sensitivity,
 )
+from comprexx.benchmark.runner import (
+    BenchmarkComparison,
+    BenchmarkResult,
+    benchmark,
+)
+from comprexx.benchmark.runner import compare as compare_benchmarks
 from comprexx.core.exceptions import (
     AccuracyGuardTriggered,
     CalibrationError,
@@ -27,6 +33,8 @@ from comprexx.recipe.loader import load_recipe
 __all__ = [
     "AccuracyGuard",
     "AccuracyGuardTriggered",
+    "BenchmarkComparison",
+    "BenchmarkResult",
     "CalibrationError",
     "CompressionReport",
     "ComprexxError",
@@ -43,6 +51,8 @@ __all__ = [
     "UnsupportedLayerError",
     "analyze",
     "analyze_sensitivity",
+    "benchmark",
+    "compare_benchmarks",
     "load_recipe",
     "stages",
 ]
