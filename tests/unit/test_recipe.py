@@ -6,7 +6,6 @@ from comprexx.core.exceptions import RecipeValidationError
 from comprexx.recipe.loader import load_recipe, recipe_to_pipeline
 from comprexx.recipe.schema import RecipeV1
 
-
 VALID_RECIPE_YAML = """\
 name: test-recipe
 version: "1.0"

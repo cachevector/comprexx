@@ -13,7 +13,6 @@ and per-layer sparsity targets instead of picking them by hand.
 
 from __future__ import annotations
 
-import copy
 from dataclasses import asdict, dataclass, field
 from typing import Callable, Literal
 
@@ -48,16 +47,16 @@ class SensitivityReport:
 
     def most_sensitive(self, n: int = 5) -> list[LayerSensitivity]:
         """Layers with the largest metric drops (in descending order)."""
-        return sorted(self.layers, key=lambda l: l.metric_drop, reverse=True)[:n]
+        return sorted(self.layers, key=lambda x: x.metric_drop, reverse=True)[:n]
 
     def most_tolerant(self, n: int = 5) -> list[LayerSensitivity]:
         """Layers with the smallest metric drops."""
-        return sorted(self.layers, key=lambda l: l.metric_drop)[:n]
+        return sorted(self.layers, key=lambda x: x.metric_drop)[:n]
 
     def recommend_exclusions(self, threshold: float) -> list[str]:
-        """Names of layers whose drop exceeds `threshold` — candidates for
+        """Names of layers whose drop exceeds `threshold`: candidates for
         `exclude_layers` in a pruning/quantization stage."""
-        return [l.name for l in self.layers if l.metric_drop > threshold]
+        return [x.name for x in self.layers if x.metric_drop > threshold]
 
     def to_dict(self) -> dict:
         return {
@@ -65,7 +64,7 @@ class SensitivityReport:
             "perturbation": self.perturbation,
             "intensity": self.intensity,
             "baseline_metric": self.baseline_metric,
-            "layers": [l.to_dict() for l in self.layers],
+            "layers": [layer.to_dict() for layer in self.layers],
         }
 
     def summary(self) -> str:
@@ -75,14 +74,16 @@ class SensitivityReport:
             f"  {len(self.layers)} layer(s) analyzed",
             "  most sensitive:",
         ]
-        for l in self.most_sensitive(5):
+        for layer in self.most_sensitive(5):
             lines.append(
-                f"    {l.name:40s}  drop={l.metric_drop:+.4f}  params={l.num_params:,}"
+                f"    {layer.name:40s}  drop={layer.metric_drop:+.4f}  "
+                f"params={layer.num_params:,}"
             )
         lines.append("  most tolerant:")
-        for l in self.most_tolerant(5):
+        for layer in self.most_tolerant(5):
             lines.append(
-                f"    {l.name:40s}  drop={l.metric_drop:+.4f}  params={l.num_params:,}"
+                f"    {layer.name:40s}  drop={layer.metric_drop:+.4f}  "
+                f"params={layer.num_params:,}"
             )
         return "\n".join(lines)
 

@@ -6,9 +6,9 @@ import torch.nn as nn
 from comprexx.stages.base import StageContext
 from comprexx.stages.decomposition.low_rank import (
     LowRankDecomposition,
+    LowRankDecompositionConfig,
     _choose_rank,
     _svd_factorize,
-    LowRankDecompositionConfig,
 )
 
 

@@ -6,7 +6,6 @@ import copy
 import time
 from typing import Literal
 
-import torch
 import torch.nn as nn
 import torch.nn.utils.prune as prune
 from pydantic import BaseModel, Field

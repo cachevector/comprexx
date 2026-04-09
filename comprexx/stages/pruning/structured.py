@@ -140,7 +140,8 @@ class StructuredPruning(CompressionStage):
                     mask[idx] = 0.0
 
                 # Apply structured mask along dim 0 (output channels / filters)
-                prune.custom_from_mask(module, "weight", mask.view(-1, 1, 1, 1).expand_as(module.weight))
+                full_mask = mask.view(-1, 1, 1, 1).expand_as(module.weight)
+                prune.custom_from_mask(module, "weight", full_mask)
 
         notes.append(f"Global pruning: zeroed {n_prune} filters across {len(to_prune)} layers.")
 

@@ -129,7 +129,8 @@ class LowRankDecomposition(CompressionStage):
                 skipped_no_gain += 1
                 continue
 
-            first, second = _svd_factorize(w, module.bias.data if module.bias is not None else None, rank)
+            bias = module.bias.data if module.bias is not None else None
+            first, second = _svd_factorize(w, bias, rank)
             replacement = nn.Sequential(first, second)
             _replace_module(model, name, replacement)
             decomposed += 1

@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import importlib
-import json
-import sys
 from pathlib import Path
 from typing import Optional
 
@@ -171,7 +169,7 @@ def export_cmd(
         out_path = Path(output_dir) / "model.onnx"
         exporter = ONNXExporter()
         with console.status("Exporting to ONNX..."):
-            manifest = exporter.export(model, input_shape=shape, output_path=str(out_path))
+            exporter.export(model, input_shape=shape, output_path=str(out_path))
         console.print(f"[green]Exported to {out_path}[/green]")
         console.print(f"Manifest: {Path(output_dir) / 'comprexx_manifest.json'}")
     else:
