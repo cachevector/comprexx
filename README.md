@@ -121,6 +121,29 @@ pipeline = cx.Pipeline([
 
 The `perturbation` can be `"prune"` (zero the smallest weights) or `"noise"` (add Gaussian noise scaled by weight std). Each layer is snapshotted and restored in place, so no deep copies of the model are made.
 
+### Benchmark inference latency
+
+Param counts and FLOPs tell you how small a model got. They don't tell you how fast it runs. `cx.benchmark` measures real latency:
+
+```python
+result = cx.benchmark(model, input_shape=(1, 3, 224, 224), warmup=10, iters=50)
+print(result.summary())
+```
+
+You get mean, median, std, p50/p90/p99, min/max, and throughput in inferences per second. To see what compression actually bought you, run `compare_benchmarks` on the baseline and compressed models:
+
+```python
+cmp = cx.compare_benchmarks(
+    baseline_model, result.model,
+    input_shape=(1, 3, 224, 224),
+    iters=50,
+)
+print(cmp.summary())
+print(f"{cmp.speedup:.2f}x faster")
+```
+
+Warmup iterations are excluded from measurements so caches and JIT settle first. Quantized models are automatically run on CPU regardless of the `device` argument.
+
 ### Export to ONNX
 
 ```python
@@ -176,6 +199,9 @@ comprexx analyze model.pt --input-shape "1,3,224,224" --json
 # Compress with a recipe
 comprexx compress model.pt --recipe recipe.yaml --input-shape "1,3,224,224"
 comprexx compress model.pt --recipe recipe.yaml --input-shape "1,3,224,224" --dry-run
+
+# Benchmark
+comprexx bench model.pt --input-shape "1,3,224,224" --iters 50
 
 # Export
 comprexx export model.pt --format onnx --input-shape "1,3,224,224"

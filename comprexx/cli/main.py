@@ -177,5 +177,30 @@ def export_cmd(
         raise typer.Exit(1)
 
 
+@app.command()
+def bench(
+    model_source: str = typer.Argument(..., help="Model path or Python module path"),
+    input_shape: str = typer.Option(..., "--input-shape", help="Input shape, e.g. '1,3,224,224'"),
+    device: str = typer.Option("cpu", help="Device (cpu or cuda)"),
+    warmup: int = typer.Option(10, "--warmup", help="Warmup iterations"),
+    iters: int = typer.Option(50, "--iters", help="Measured iterations"),
+    json_output: bool = typer.Option(False, "--json", help="Output as JSON"),
+):
+    """Benchmark a model's inference latency."""
+    from comprexx.benchmark.runner import benchmark
+
+    shape = _parse_input_shape(input_shape)
+    model = _load_model(model_source)
+
+    with console.status("Benchmarking..."):
+        result = benchmark(model, input_shape=shape, device=device,
+                           warmup=warmup, iters=iters)
+
+    if json_output:
+        console.print(result.to_json())
+    else:
+        console.print(Panel(result.summary(), title="Comprexx Benchmark"))
+
+
 if __name__ == "__main__":
     app()
