@@ -233,8 +233,8 @@ And for picking what to compress:
 
 Check out the example notebooks in [`examples/`](./examples/):
 
-- [ResNet18 edge deployment](./examples/resnet18_edge_deploy.ipynb): profile, fuse, prune, quantize, benchmark, and export a ResNet18 to ONNX.
-- [BERT-tiny quantization](./examples/bert_tiny_quantize.ipynb): low-rank decomposition + INT4 weight quantization on a small transformer, with latency benchmarks.
+- [ResNet18 edge deployment](./examples/resnet18_edge_deploy.ipynb): profile, fuse Conv+BN, prune, benchmark, and export a ResNet18 to ONNX.
+- [Linear layer compression](./examples/linear_compression.ipynb): compares low-rank SVD, weight-only INT4, and dynamic INT8 quantization on a feedforward network.
 
 ## License
 
