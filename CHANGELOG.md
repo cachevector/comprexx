@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   p50/p90/p99, min/max, and throughput. `cx.compare_benchmarks()` returns a
   before/after comparison with speedup and latency/throughput deltas. Quantized
   models are automatically run on CPU. New `comprexx bench` CLI command.
+- Example notebooks: ResNet18 edge deployment (prune + quantize + ONNX export)
+  and BERT-tiny quantization (low-rank decomposition + INT4 weight quant).
 - GitHub Actions CI workflow running `pytest` on Python 3.10, 3.11, 3.12 plus a
   `ruff check` lint job.
 - `CHANGELOG.md` with history for v0.1.0 and v0.2.0.

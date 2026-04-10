@@ -229,6 +229,13 @@ And for picking what to compress:
 |------|-------------|
 | Sensitivity analysis | `cx.analyze_sensitivity()` probes each Conv2d/Linear layer with a prune or noise perturbation, re-runs your `eval_fn`, and ranks layers by metric drop. Can also suggest `exclude_layers` above a chosen threshold. |
 
+## Examples
+
+Check out the example notebooks in [`examples/`](./examples/):
+
+- [ResNet18 edge deployment](./examples/resnet18_edge_deploy.ipynb): profile, fuse, prune, quantize, benchmark, and export a ResNet18 to ONNX.
+- [BERT-tiny quantization](./examples/bert_tiny_quantize.ipynb): low-rank decomposition + INT4 weight quantization on a small transformer, with latency benchmarks.
+
 ## License
 
 Apache 2.0
