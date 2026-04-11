@@ -7,24 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-04-11
+
 ### Added
 - **Benchmarking module** (`comprexx.benchmark`): `cx.benchmark()` measures real
   inference latency with configurable warmup/iters, reporting mean, median, std,
   p50/p90/p99, min/max, and throughput. `cx.compare_benchmarks()` returns a
   before/after comparison with speedup and latency/throughput deltas. Quantized
   models are automatically run on CPU. New `comprexx bench` CLI command.
-- Example notebooks: ResNet18 edge deployment (prune + quantize + ONNX export)
-  and BERT-tiny quantization (low-rank decomposition + INT4 weight quant).
+- Example notebooks with cell outputs: ResNet18 edge deployment (fuse, prune,
+  benchmark, ONNX export) and linear layer compression (SVD, weight-only INT4,
+  dynamic INT8).
 - GitHub Actions CI workflow running `pytest` on Python 3.10, 3.11, 3.12 plus a
   `ruff check` lint job.
 - `CHANGELOG.md` with history for v0.1.0 and v0.2.0.
 
 ### Changed
-- Silenced the noisy `torch.ao.quantization is deprecated` warning inside the
+- Silenced the `torch.ao.quantization is deprecated` warning inside the
   PTQ dynamic and static stages. The underlying API is still used, with a
-  `TODO(v0.3)` marking the upcoming migration to `torchao.quantization`.
-- Fixed the package `__version__` to report `0.2.0` instead of the stale
-  `0.1.0` that shipped on PyPI.
+  TODO marking the upcoming migration to `torchao.quantization`.
+- Fixed the package `__version__` to report the correct version.
 - Tightened the codebase against `ruff check` and added a per-file ignore
   for `E741` in tests.
 
@@ -65,6 +67,7 @@ Initial release.
 - Accuracy guards with halt/warn actions.
 - Per-stage compression reports persisted under `comprexx_runs/`.
 
-[Unreleased]: https://github.com/cachevector/comprexx/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/cachevector/comprexx/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/cachevector/comprexx/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/cachevector/comprexx/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/cachevector/comprexx/releases/tag/v0.1.0

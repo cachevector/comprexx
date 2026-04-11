@@ -1,6 +1,6 @@
 [project]
 name = "comprexx"
-version = "0.2.0"
+version = "0.3.0"
 description = "ML Model Compression & Deployment Optimization Toolkit"
 readme = "README.md"
 license = "Apache-2.0"
