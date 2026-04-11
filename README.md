@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./docs/assets/comprexx-logo.svg" alt="Comprexx Logo" width="100" />
+  <img src="https://raw.githubusercontent.com/cachevector/comprexx/master/docs/assets/comprexx-logo.svg" alt="Comprexx Logo" width="100" />
 </p>
 
 <h1 align="center">Comprexx</h1>
@@ -231,10 +231,10 @@ And for picking what to compress:
 
 ## Examples
 
-Check out the example notebooks in [`examples/`](./examples/):
+Check out the example notebooks in [`examples/`](https://github.com/cachevector/comprexx/tree/master/examples/):
 
-- [ResNet18 edge deployment](./examples/resnet18_edge_deploy.ipynb): profile, fuse Conv+BN, prune, benchmark, and export a ResNet18 to ONNX.
-- [Linear layer compression](./examples/linear_compression.ipynb): compares low-rank SVD, weight-only INT4, and dynamic INT8 quantization on a feedforward network.
+- [ResNet18 edge deployment](https://github.com/cachevector/comprexx/blob/master/examples/resnet18_edge_deploy.ipynb): profile, fuse Conv+BN, prune, benchmark, and export a ResNet18 to ONNX.
+- [Linear layer compression](https://github.com/cachevector/comprexx/blob/master/examples/linear_compression.ipynb): compares low-rank SVD, weight-only INT4, and dynamic INT8 quantization on a feedforward network.
 
 ## License
 
